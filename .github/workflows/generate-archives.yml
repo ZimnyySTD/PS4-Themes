@@ -1,0 +1,35 @@
+name: Sync library and generate collection ZIPs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "collections/**"
+      - "data/collections.json"
+      - "scripts/**"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Sync collection and theme lists from folders
+        run: python3 scripts/sync-library.py
+      - name: Generate collection archives
+        run: python3 scripts/generate-archives.py
+      - name: Commit updates
+        run: |
+          git add -A data/collections.json collections
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: sync library index and archives"
+            git push
+          else
+            echo "Nothing to update."
+          fi
