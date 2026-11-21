@@ -1,0 +1,13 @@
+{
+  "id": "GTA-VI",
+  "title": "GTA VI",
+  "description": "GTA VI collection by FernyOven",
+  "author": "FernyOven",
+  "cover": "cover.png",
+  "created": "2026-11-21",
+  "updated": "2026-11-21",
+  "themes": [
+    "GTA-VI-I"
+  ],
+  "archive": "collection.zip"
+}
