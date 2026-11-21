@@ -17,60 +17,24 @@
       <span>PS4 <b>Theme Library</b></span>
     </a>
     <nav class="main-nav" aria-label="Main navigation">
-      <a class="active" href="./">Discover</a>
-      <a href="pages/collection.html">Collections</a>
+      <a class="active" href="./">Collections</a>
       <a href="pages/favorites.html">Favorites <span id="favorite-nav-count" class="nav-count">0</span></a>
     </nav>
-    <a class="github-link" href="https://github.com/ZimnyySTD/PS4-Themes" target="_blank" rel="noreferrer">GitHub ↗</a>
+    <a class="github-link" href="https://github.com/" target="_blank" rel="noreferrer">GitHub ↗</a>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">THE COMMUNITY THEME LIBRARY</p>
-        <h1>Make your<br><span>PS4 feel yours.</span></h1>
-        <p class="hero-description">Discover, preview and download themes from curated collections.</p>
-        <a class="button button-primary" href="#browse">Explore themes <span>↓</span></a>
-      </div>
-      <div class="hero-art" aria-hidden="true">
-        <div class="orb orb-one"></div><div class="orb orb-two"></div>
-        <div class="hero-console"><div class="console-line"></div><div class="console-light"></div></div>
-        <div class="hero-art-label">PERSONALIZE YOUR CONSOLE</div>
-      </div>
-    </section>
-
-    <section class="stats-row" aria-label="Library statistics">
-      <div><strong id="stat-themes">—</strong><span>Themes</span></div>
-      <div><strong id="stat-collections">—</strong><span>Collections</span></div>
-      <div><strong id="stat-authors">—</strong><span>Creators</span></div>
-    </section>
-
-    <section class="section-block" id="browse">
-      <div class="section-heading">
-        <div><p class="eyebrow">FIND YOUR NEXT LOOK</p><h2>Browse themes</h2></div>
-        <button id="random-theme" class="button button-quiet" type="button">✦ Surprise me</button>
-      </div>
-      <div class="toolbar">
-        <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Search themes, tags, creators..." autocomplete="off"></label>
-        <select id="type-filter" aria-label="Filter by theme type"><option value="">All types</option><option value="dynamic">Dynamic</option><option value="static">Static</option></select>
-        <select id="collection-filter" aria-label="Filter by collection"><option value="">All collections</option></select>
-        <select id="sort-select" aria-label="Sort themes"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="az">Name A–Z</option><option value="rating">Highest rated</option></select>
-      </div>
-      <div id="theme-grid" class="theme-grid" aria-live="polite"><div class="loading-state">Loading the library…</div></div>
-      <p id="result-count" class="result-count"></p>
-    </section>
-
-    <section class="section-block collection-section">
-      <div class="section-heading"><div><p class="eyebrow">CURATED FOR YOU</p><h2>Collections</h2></div><a class="text-link" href="pages/collection.html">View all →</a></div>
-      <div id="collection-grid" class="collection-grid"><div class="loading-state">Loading collections…</div></div>
-    </section>
-    <section class="section-block recent-section">
-      <div class="section-heading"><div><p class="eyebrow">FRESH FROM THE LIBRARY</p><h2>Recently added</h2></div></div>
-      <div id="recent-grid" class="theme-grid compact-grid"></div>
-    </section>
+  <main class="container page-container">
+    <div class="page-intro">
+      <h1>PS4 Theme Library</h1>
+      <p>Pick a collection to browse and download its themes.</p>
+    </div>
+    <div class="collection-search">
+      <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Search collections..." autocomplete="off"></label>
+    </div>
+    <div id="collection-grid" class="collection-grid" aria-live="polite"><div class="loading-state">Loading collections…</div></div>
   </main>
 
-  <footer class="site-footer"><a class="brand footer-brand" href="./"><img src="assets/logo.svg" alt="" width="26" height="26"><span>PS4 <b>Theme Library</b></span></a><p>Community-made themes. Respect the original creators.</p><span>Static site · Powered by GitHub Pages</span></footer>
+  <footer class="site-footer"><a class="brand footer-brand" href="./"><img src="assets/logo.svg" alt="" width="26" height="26"><span>PS4 <b>Theme Library</b></span></a><p>Community-made themes. Respect the original creators.</p></footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

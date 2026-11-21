@@ -18,13 +18,21 @@ for slug in slugs:
     info = json.loads(info_path.read_text(encoding="utf-8"))
     archive_name = info.get("archive", "collection.zip")
     archive_path = folder / archive_name
-    with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        archive.write(info_path, "info.json")
+    # Fixed timestamps + sorted order => identical output when content is unchanged,
+    # so the workflow only commits when something really changed.
+    def add(archive, path, name):
+        zi = zipfile.ZipInfo(name, date_time=(2020, 1, 1, 0, 0, 0))
+        zi.compress_type = zipfile.ZIP_DEFLATED
+        zi.external_attr = 0o644 << 16
+        archive.writestr(zi, path.read_bytes())
+
+    with zipfile.ZipFile(archive_path, "w") as archive:
+        add(archive, info_path, "info.json")
         for theme_slug in info.get("themes", []):
             theme_dir = folder / theme_slug
             if not theme_dir.is_dir():
                 raise SystemExit(f"Missing theme folder: {theme_dir}")
-            for path in theme_dir.rglob("*"):
+            for path in sorted(theme_dir.rglob("*")):
                 if path.is_file():
-                    archive.write(path, path.relative_to(folder).as_posix())
+                    add(archive, path, path.relative_to(folder).as_posix())
     print(f"Created {archive_path.relative_to(ROOT)}")

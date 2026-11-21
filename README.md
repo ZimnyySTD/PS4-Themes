@@ -2,18 +2,13 @@
 
 A static, GitHub Pages-ready theme library. Browse collections, search and filter themes, open individual theme pages, save local favorites, rate themes locally, and download individual `.pkg` files or collection ZIP archives.
 
-## Features
+## How the site works
 
-- Data-driven collections and themes (add content by editing JSON and uploading files; no frontend edits required).
-- Collection pages and individual theme detail pages.
-- Search by title, creator, description, collection and tags.
-- Filters for theme type and collection; sorting by newest, oldest, name or locally rated score.
-- Favorites stored in the visitor's browser using `localStorage`.
-- Theme ratings stored locally in each visitor's browser.
-- Recently added themes based on the `created` date in theme metadata.
-- Random theme button.
-- Individual `.pkg` downloads and generated ZIP archives for whole collections.
-- Responsive dark UI, suitable for desktop and mobile.
+- The home page shows **collections only**. Open a collection to see its themes, then click a theme for its page and `.pkg` download.
+- Each collection page can offer a collection ZIP (generated automatically by the workflow).
+- Favorites and ratings are stored in the visitor's browser (`localStorage`). The Favorites page is the only other place themes are listed.
+- Content is data-driven: add collections/themes by editing JSON and uploading files. No frontend edits needed.
+- All paths are resolved from the site root, so it works on a GitHub Pages project URL, a custom domain, or a local server.
 
 > **Important about ratings and counters:** GitHub Pages is static hosting. Favorites and ratings are local to each browser, not shared globally. The download count in this starter is also a local click count, not a public global counter. Shared ratings and reliable global download analytics require a backend or analytics service. The starter intentionally does not pretend that local data is global.
 
@@ -28,6 +23,8 @@ A static, GitHub Pages-ready theme library. Browse collections, search and filte
 7. Wait for GitHub Pages to publish the site.
 
 The website uses relative paths and works from a GitHub Pages project URL such as `https://YOUR-NAME.github.io/ps4-theme-library/`.
+
+The GitHub button in the header is detected automatically on `*.github.io` sites. For a custom domain, set `repositoryUrl` in `config.json`.
 
 ## 2. Add a collection
 
@@ -176,8 +173,7 @@ http://localhost:8000
 
 ## 6. GitHub Pages URLs
 
-- Homepage: `/`
-- All collections: `/pages/collection.html`
+- Homepage (all collections): `/`
 - One collection: `/pages/collection.html?id=COLLECTION_SLUG`
 - One theme: `/pages/theme.html?collection=COLLECTION_SLUG&id=THEME_SLUG`
 - Favorites: `/pages/favorites.html`
