@@ -8,6 +8,15 @@
   let collections = [];
   let toastTimer;
 
+  function siteRoot() {
+    return document.body.dataset.page === "home" ? "" : "../";
+  }
+  function pageRoot() {
+    return document.body.dataset.page === "home" ? "pages/" : "";
+  }
+  function assetUrl(file) {
+    return pathJoin(siteRoot(), file);
+  }
   function readStore(key, fallback) {
     try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
   }
@@ -52,8 +61,9 @@
   function themeCard(theme, compact = false) {
     const r = ratingFor(themeKey(theme));
     const rating = r.count ? `★ ${r.average.toFixed(1)}` : "Not rated";
+    const previewFallback = assetUrl("assets/images/preview-fallback.svg");
     return `<article class="theme-card">
-      <a class="theme-image" href="${allThemeUrl(theme)}"><img src="${escapeHtml(imageUrl(theme))}" alt="${escapeHtml(theme.title)} preview" loading="lazy" onerror="this.src='../assets/images/preview-fallback.svg'"><span class="type-pill">${escapeHtml(theme.type || "theme")}</span></a>
+      <a class="theme-image" href="${allThemeUrl(theme)}"><img src="${escapeHtml(imageUrl(theme))}" alt="${escapeHtml(theme.title)} preview" loading="lazy" onerror="this.onerror=null;this.src='${escapeHtml(previewFallback)}'"><span class="type-pill">${escapeHtml(theme.type || "theme")}</span></a>
       ${favoriteButton(theme)}
       <div class="card-content"><div class="card-topline"><h3 class="card-title">${escapeHtml(theme.title)}</h3><span class="rating-mini">${rating}</span></div>
       <p class="card-description">${escapeHtml(theme.description || "No description provided.")}</p>
@@ -62,19 +72,21 @@
   }
   function collectionCard(collection) {
     const cover = pathJoin(collection.basePath, collection.cover);
-    return `<a class="collection-card" href="pages/collection.html?id=${encodeURIComponent(collection.id)}">
-      <img src="${escapeHtml(cover || "assets/images/cover-fallback.svg")}" alt="${escapeHtml(collection.title)} cover" loading="lazy" onerror="this.src='../assets/images/cover-fallback.svg'">
+    const coverFallback = assetUrl("assets/images/cover-fallback.svg");
+    return `<a class="collection-card" href="${pageRoot()}collection.html?id=${encodeURIComponent(collection.id)}">
+      <img src="${escapeHtml(cover || coverFallback)}" alt="${escapeHtml(collection.title)} cover" loading="lazy" onerror="this.onerror=null;this.src='${escapeHtml(coverFallback)}'">
       <div class="collection-card-content"><h3>${escapeHtml(collection.title)}</h3><p>${escapeHtml(collection.description || "")}</p><small>${collection.themes.length} ${collection.themes.length === 1 ? "THEME" : "THEMES"} · BY ${escapeHtml(collection.author || "UNKNOWN")}</small></div>
     </a>`;
   }
   async function loadLibrary() {
-    const response = await fetch("data/collections.json");
-    if (!response.ok) throw new Error("Could not load data/collections.json");
+    const registryUrl = `${siteRoot()}data/collections.json`;
+    const response = await fetch(registryUrl);
+    if (!response.ok) throw new Error(`Could not load ${registryUrl}`);
     const registry = await response.json();
     const slugs = Array.isArray(registry) ? registry : registry.collections;
     if (!Array.isArray(slugs)) throw new Error("data/collections.json must contain a collections array");
     const loaded = await Promise.all(slugs.map(async slug => {
-      const basePath = `collections/${encodeURIComponent(slug)}`;
+      const basePath = `${siteRoot()}collections/${encodeURIComponent(slug)}`;
       const res = await fetch(`${basePath}/info.json`);
       if (!res.ok) throw new Error(`Could not load ${basePath}/info.json`);
       const info = await res.json();
@@ -187,8 +199,9 @@
     if (!theme) { root.innerHTML = `<div class="empty-state"><strong>Theme not found</strong>Check the link or return to the library.</div><a class="text-link" href="../">← Back to library</a>`; return; }
     const key = themeKey(theme), r = ratingFor(key);
     const download = theme.download ? pathJoin(theme.basePath, theme.download) : "";
+    const previewFallback = assetUrl("assets/images/preview-fallback.svg");
     root.innerHTML = `<a class="detail-back" href="collection.html?id=${encodeURIComponent(theme.collectionId)}">← ${escapeHtml(theme.collectionTitle)}</a>
-      <div class="detail-layout"><div><img class="detail-preview" src="${escapeHtml(imageUrl(theme))}" alt="${escapeHtml(theme.title)} preview" onerror="this.src='../assets/images/preview-fallback.svg'">
+      <div class="detail-layout"><div><img class="detail-preview" src="${escapeHtml(imageUrl(theme))}" alt="${escapeHtml(theme.title)} preview" onerror="this.onerror=null;this.src='${escapeHtml(previewFallback)}'">
       <div class="rating-box"><strong>Rate this theme</strong><div class="stars" role="group" aria-label="Rate this theme">${[1,2,3,4,5].map(n=>`<button class="star-button ${r.count && n <= Math.round(r.average) ? "selected" : ""}" data-rate="${n}" aria-label="Rate ${n} out of 5">★</button>`).join("")}</div><p class="muted-small">${r.count ? `${r.average.toFixed(1)} / 5 from ${r.count} rating${r.count===1?"":"s"} on this browser` : "No local ratings yet. Your rating is saved in this browser."}</p></div></div>
       <div class="detail-info"><p class="eyebrow">${escapeHtml((theme.type || "THEME").toUpperCase())} THEME</p><h1>${escapeHtml(theme.title)}</h1><p>${escapeHtml(theme.description || "No description provided.")}</p>
       <div class="detail-actions">${download ? `<a class="button button-primary" id="download-theme" href="${escapeHtml(download)}" download>↓ Download .pkg</a>` : `<button class="button button-primary" disabled title="Add a download filename to this theme's info.json">Download unavailable</button>`}<button class="button button-quiet" data-favorite="${escapeHtml(key)}">${favorites().includes(key) ? "♥ Saved" : "♡ Favorite"}</button></div>

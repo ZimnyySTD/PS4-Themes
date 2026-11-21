@@ -1,0 +1,36 @@
+name: Generate collection ZIP archives
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - data/collections.json
+      - collections/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Generate collection archives
+        run: python3 scripts/generate-archives.py
+
+      - name: Commit generated archives
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add collections/*/collection.zip
+          if git diff --cached --quiet; then
+            echo "No archive changes"
+            exit 0
+          fi
+          git diff --cached --stat
+          git commit -m "Regenerate collection archives"
+          git push
